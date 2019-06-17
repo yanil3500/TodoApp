@@ -11,7 +11,8 @@ import UIKit
 class TodoListViewController: UITableViewController {
     let CELL_REUSE_IDENTIFIER = "TodoItemCell"
 
-    let items = ["Find Mike", "Buy Eggos", "Pick up laundry"]
+    var items = ["Find Mike", "Buy Eggos", "Pick up laundry"]
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +46,37 @@ class TodoListViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
-
+    
+    //MARK: - Add New Items
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
+        
+        // adds text field so the user can provide new items
+        alert.addTextField { (textField) in
+            textField.placeholder = "Ex: Buy Soap"
+        }
+        
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            // what will happen once the user clicks the Add Item button on our UIAlert
+            
+            // get 
+            guard let textFields = alert.textFields else { fatalError("Failed to get text field.") }
+            let alertTextField = textFields[0]
+            guard let itemText = alertTextField.text, !itemText.isEmpty else { return }
+            
+            self.items.append(itemText)
+            
+            self.tableView.reloadData()
+            
+            print(self.items.count)
+            
+        }
+        
+        alert.addAction(action)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
 
 }
