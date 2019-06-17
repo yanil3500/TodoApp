@@ -13,10 +13,17 @@ class TodoListViewController: UITableViewController {
 
     var items = ["Find Mike", "Buy Eggos", "Pick up laundry"]
     
+    let defaults = UserDefaults.standard
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        if let itemArray = defaults.array(forKey: "TodoListArray") as? [String] {
+            items = itemArray
+        }
+        
     }
 
     // MARK: - TableView Datasource Methods
@@ -71,6 +78,8 @@ class TodoListViewController: UITableViewController {
             
             // add the item to the list
             self.items.append(itemText)
+            
+            self.defaults.set(self.items, forKey: "TodoListArray")
             
             // reloads the table view so that the new data is shown
             self.tableView.reloadData()
