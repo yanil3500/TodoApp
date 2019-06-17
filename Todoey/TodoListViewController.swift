@@ -60,16 +60,21 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // what will happen once the user clicks the Add Item button on our UIAlert
             
-            // get 
+            // get list of text fields
             guard let textFields = alert.textFields else { fatalError("Failed to get text field.") }
+            
+            // grab the first one
             let alertTextField = textFields[0]
+            
+            // grab the text from the text field and assign to local constant if the value is not an empty string.
             guard let itemText = alertTextField.text, !itemText.isEmpty else { return }
             
+            // add the item to the list
             self.items.append(itemText)
             
+            // reloads the table view so that the new data is shown
             self.tableView.reloadData()
             
-            print(self.items.count)
             
         }
         
