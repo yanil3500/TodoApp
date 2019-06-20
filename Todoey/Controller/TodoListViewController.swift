@@ -10,17 +10,22 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
     let CELL_REUSE_IDENTIFIER = "TodoItemCell"
-
-    var items = ["Find Mike", "Buy Eggos", "Pick up laundry"]
     
+    var items = [
+        Item(title: "Find Mike"),
+        Item(title: "Buy Eggos"),
+        Item(title: "Pick up laundry")
+    ]
     let defaults = UserDefaults.standard
+    
+    let SAVED_ITEM_KEY = "TodoListArray"
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        if let itemArray = defaults.array(forKey: "TodoListArray") as? [String] {
+        if let itemArray = defaults.array(forKey: SAVED_ITEM_KEY) as? [Item] {
             items = itemArray
         }
         
@@ -31,7 +36,8 @@ class TodoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CELL_REUSE_IDENTIFIER)!
         let item = items[indexPath.row]
-        cell.textLabel?.text = item
+        cell.textLabel?.text = item.title
+        cell.accessoryType = item.isDone ? .checkmark : .none
         return cell
     }
 
@@ -43,18 +49,20 @@ class TodoListViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let selectedCell = tableView.cellForRow(at: indexPath)
+        let selectedItem = items[indexPath.row]
         
-        let isChecked = selectedCell?.accessoryType == .checkmark
-        
-        // if the selected cell has the .checkmark accessory type, then set it to the .none accessory type
-        selectedCell?.accessoryType = isChecked ? .none : .checkmark
+        // changes the done property when the user checks (or unchecks) the item from in the list
+        selectedItem.toggleDone()
 
+        tableView.reloadData()
+        
         tableView.deselectRow(at: indexPath, animated: true)
         
+        // since the items have changed, let's save them to disk
+//        defaults.set(self.items, forKey: SAVED_ITEM_KEY)
     }
     
-    //MARK: - Add New Items
+    // MARK: - Add New Items
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
         
@@ -77,13 +85,13 @@ class TodoListViewController: UITableViewController {
             guard let itemText = alertTextField.text, !itemText.isEmpty else { return }
             
             // add the item to the list
-            self.items.append(itemText)
+            let newItem = Item(title: itemText)
+            self.items.append(newItem)
             
-            self.defaults.set(self.items, forKey: "TodoListArray")
+            self.defaults.set(self.items, forKey: self.SAVED_ITEM_KEY)
             
             // reloads the table view so that the new data is shown
             self.tableView.reloadData()
-            
             
         }
         
