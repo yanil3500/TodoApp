@@ -8,31 +8,36 @@
 
 import UIKit
 
+let DEFAULT_ITEMS = [
+    Item(title: "Find Mike"),
+    Item(title: "Buy Eggos"),
+    Item(title: "Save the World!"),
+    Item(title: "Buy Shampoo")
+]
+
 class TodoListViewController: UITableViewController {
     let CELL_REUSE_IDENTIFIER = "TodoItemCell"
     
-    var items = [
-        Item(title: "Find Mike"),
-        Item(title: "Buy Eggos"),
-        Item(title: "Pick up laundry")
-    ]
+    var items = [Item]() {
+        didSet {
+            self.tableView.reloadData()
+        }
+    }
     let defaults = UserDefaults.standard
     
     let SAVED_ITEM_KEY = "TodoListArray"
     
-
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         
-        if let itemArray = defaults.array(forKey: SAVED_ITEM_KEY) as? [Item] {
-            items = itemArray
-        }
-        
+        // Load items
+        items = loadItems()
     }
-
+    
     // MARK: - TableView Datasource Methods
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CELL_REUSE_IDENTIFIER)!
         let item = items[indexPath.row]
@@ -40,39 +45,38 @@ class TodoListViewController: UITableViewController {
         cell.accessoryType = item.isDone ? .checkmark : .none
         return cell
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
     }
-
+    
     // MARK: - TableView Delegate Methods
-
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         let selectedItem = items[indexPath.row]
         
         // changes the done property when the user checks (or unchecks) the item from in the list
         selectedItem.toggleDone()
-
+        
         tableView.reloadData()
         
         tableView.deselectRow(at: indexPath, animated: true)
         
         // since the items have changed, let's save them to disk
-//        defaults.set(self.items, forKey: SAVED_ITEM_KEY)
+        saveItems()
     }
     
     // MARK: - Add New Items
+    
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
         
         // adds text field so the user can provide new items
-        alert.addTextField { (textField) in
+        alert.addTextField { textField in
             textField.placeholder = "Ex: Buy Soap"
         }
         
-        
-        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+        let action = UIAlertAction(title: "Add Item", style: .default) { _ in
             // what will happen once the user clicks the Add Item button on our UIAlert
             
             // get list of text fields
@@ -88,11 +92,11 @@ class TodoListViewController: UITableViewController {
             let newItem = Item(title: itemText)
             self.items.append(newItem)
             
-            self.defaults.set(self.items, forKey: self.SAVED_ITEM_KEY)
+            // save items to disk
+            self.saveItems()
             
             // reloads the table view so that the new data is shown
             self.tableView.reloadData()
-            
         }
         
         alert.addAction(action)
@@ -100,5 +104,20 @@ class TodoListViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
     
-
+    func saveItems() {
+        let encoder = PropertyListEncoder()
+        do {
+            let data = try encoder.encode(items)
+            try data.write(to: dataFilePath!)
+        } catch {
+            print("Error encoding [Item]: \(error)")
+        }
+    }
+    
+    func loadItems() -> [Item] {
+        guard let data = try? Data(contentsOf: dataFilePath!) else { return DEFAULT_ITEMS }
+        let decoder = PropertyListDecoder()
+        guard let items : [Item] = try? decoder.decode([Item].self, from: data) else { return DEFAULT_ITEMS }
+        return items
+    }
 }

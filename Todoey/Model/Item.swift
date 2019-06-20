@@ -8,14 +8,16 @@
 
 import Foundation
 
-class Item {
-    let title : String
-    private(set) var isDone : Bool = false
-    
+
+// By conforming to the Codable protocol, we're saying this is a type that only contains standard types that can encoded/decoded to/from another representation.
+class Item: Codable {
+    let title: String
+    private(set) var isDone: Bool = false
+
     func toggleDone() {
         self.isDone = !self.isDone
     }
-    
+
     init(title: String) {
         self.title = title
     }
