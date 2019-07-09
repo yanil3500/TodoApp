@@ -9,16 +9,7 @@
 import RealmSwift
 import UIKit
 
-let list = """
-Shopping List
-Home
-Work
-Misc.
-"""
-
-class CategoryViewController: UITableViewController {
-    let CELL_REUSE_IDENTIFIER = "CategoryCell"
-
+class CategoryViewController: SwipeTableViewController {
     let SEGUE_IDENTIFIER = "goToItems"
 
     var categories: Results<Category>?
@@ -33,7 +24,7 @@ class CategoryViewController: UITableViewController {
     // MARK: - TableView Datasource Methods
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CELL_REUSE_IDENTIFIER)!
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         let category = categories?[indexPath.row]
         cell.textLabel?.text = category?.name
         return cell
@@ -100,5 +91,14 @@ class CategoryViewController: UITableViewController {
         alert.addAction(action)
 
         present(alert, animated: true, completion: nil)
+    }
+
+    // MARK: - Delete Data From Swipe
+
+    override func updateModel(at indexPath: IndexPath) {
+        CategoryStorage.shared.update { [unowned self] realm in
+            guard let categoryForDeletion = self.categories?[indexPath.row] else { return }
+            realm?.delete(categoryForDeletion)
+        }
     }
 }

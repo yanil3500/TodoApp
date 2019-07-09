@@ -29,8 +29,11 @@ class CategoryStorage {
         }
     }
 
+    func update(_ operation: Operation) {
+        save(operation)
+    }
+
     func load() -> Results<Category> {
-//        let categories = realm.objects(Category.self)
         return realm.objects(Category.self)
     }
 }

@@ -9,9 +9,7 @@
 import RealmSwift
 import UIKit
 
-class TodoListViewController: UITableViewController {
-    let CELL_REUSE_IDENTIFIER = "TodoItemCell"
-
+class TodoListViewController: SwipeTableViewController {
     var selectedCategory: Category? {
         didSet {
             load()
@@ -27,7 +25,7 @@ class TodoListViewController: UITableViewController {
     // MARK: - TableView Datasource Methods
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CELL_REUSE_IDENTIFIER)!
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if let item = items?[indexPath.row] {
             cell.textLabel?.text = item.title
             cell.accessoryType = item.done ? .checkmark : .none
@@ -47,7 +45,7 @@ class TodoListViewController: UITableViewController {
         guard let selectedItem = items?[indexPath.row] else { return }
 
         // changes the done property when the user checks (or unchecks) the item from in the list
-        // since the items have changed, let's save them to disk
+        // since the items have changed, let's store them
         CategoryStorage.shared.save { _ in
             selectedItem.done = !selectedItem.done
         }
@@ -101,6 +99,15 @@ class TodoListViewController: UITableViewController {
 
     private func load() {
         items = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
+    }
+
+    // MARK: - Delete Data From Swipe
+
+    override func updateModel(at indexPath: IndexPath) {
+        CategoryStorage.shared.update { [unowned self] realm in
+            guard let item = self.items?[indexPath.row] else { return }
+            realm?.delete(item)
+        }
     }
 }
 
