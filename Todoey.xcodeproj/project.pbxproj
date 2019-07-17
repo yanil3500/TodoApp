@@ -12,6 +12,7 @@
 		CD151AF822D400CD009CE75F /* CategoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD151AF722D400CD009CE75F /* CategoryStorage.swift */; };
 		CD71E89722BC3AB200645E79 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71E89622BC3AB200645E79 /* CategoryViewController.swift */; };
 		CD85306022D435F100469701 /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85305F22D435F100469701 /* SwipeTableViewController.swift */; };
+		CDAD794E22DEAFAC0039C0AD /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAD794D22DEAFAC0039C0AD /* UIColor+Extension.swift */; };
 		CDCDC5D622B804730028D121 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCDC5D522B804730028D121 /* AppDelegate.swift */; };
 		CDCDC5D822B804730028D121 /* TodoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCDC5D722B804730028D121 /* TodoListViewController.swift */; };
 		CDCDC5DB22B804730028D121 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CDCDC5D922B804730028D121 /* Main.storyboard */; };
@@ -28,6 +29,7 @@
 		CD151AF722D400CD009CE75F /* CategoryStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryStorage.swift; sourceTree = "<group>"; };
 		CD71E89622BC3AB200645E79 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		CD85305F22D435F100469701 /* SwipeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeTableViewController.swift; sourceTree = "<group>"; };
+		CDAD794D22DEAFAC0039C0AD /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		CDCDC5D222B804730028D121 /* Todoey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todoey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDCDC5D522B804730028D121 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CDCDC5D722B804730028D121 /* TodoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListViewController.swift; sourceTree = "<group>"; };
@@ -89,6 +91,14 @@
 			path = Controller;
 			sourceTree = "<group>";
 		};
+		CDAD794C22DEAF830039C0AD /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				CDAD794D22DEAFAC0039C0AD /* UIColor+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		CDCDC5C922B804730028D121 = {
 			isa = PBXGroup;
 			children = (
@@ -113,6 +123,7 @@
 				CD88ACD222B97074002EC594 /* Model */,
 				CD88ACD322B97080002EC594 /* View */,
 				CD88ACD422B97087002EC594 /* Controller */,
+				CDAD794C22DEAF830039C0AD /* Extensions */,
 				CDCDC5E122B804750028D121 /* Info.plist */,
 			);
 			path = Todoey;
@@ -260,6 +271,7 @@
 				CDCDC5D622B804730028D121 /* AppDelegate.swift in Sources */,
 				CD151AF622D3FD29009CE75F /* Category.swift in Sources */,
 				CD151AF822D400CD009CE75F /* CategoryStorage.swift in Sources */,
+				CDAD794E22DEAFAC0039C0AD /* UIColor+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

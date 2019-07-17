@@ -19,10 +19,42 @@ class TodoListViewController: SwipeTableViewController {
 
     var items: Results<Item>?
 
+    @IBOutlet var searchBar: UISearchBar!
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        title = selectedCategory?.name
+        
+        guard let color = selectedCategory?.color else { fatalError() }
+        
+        updateNavigationBar(withHexCode: color)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        updateNavigationBar(withHexCode: UIColor.whiteColorHexString)
+    }
+    
+    
+    // MARK: - Navigation Bar Setup
+    func updateNavigationBar(withHexCode colorHexCode: String){
+        guard let navigationBar = navigationController?.navigationBar else { fatalError("Navigation Controller does not exist.") }
+        
+        let barTintColor = UIColor(hexString: colorHexCode)!
+        
+        navigationBar.barTintColor = barTintColor
+        
+        navigationBar.tintColor = ContrastColorOf(barTintColor, returnFlat: true)
+        
+        navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(barTintColor, returnFlat: true)]
+        
+        searchBar.barTintColor = barTintColor
+    }
+    
     // MARK: - TableView Datasource Methods
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -40,8 +72,6 @@ class TodoListViewController: SwipeTableViewController {
                 cell.backgroundColor = backgroundColor
                 cell.textLabel?.textColor = ContrastColorOf(backgroundColor, returnFlat: true)
             }
-            
-            
 
         } else {
             cell.textLabel?.text = "No Items Added"
