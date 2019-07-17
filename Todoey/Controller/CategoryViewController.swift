@@ -6,8 +6,9 @@
 //  Copyright © 2019 Elyanil Liranzo Castro. All rights reserved.
 //
 
-import RealmSwift
 import UIKit
+import RealmSwift
+import ChameleonFramework
 
 class CategoryViewController: SwipeTableViewController {
     let SEGUE_IDENTIFIER = "goToItems"
@@ -19,14 +20,19 @@ class CategoryViewController: SwipeTableViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
 
         categories = CategoryStorage.shared.load()
+        
+        tableView.separatorStyle = .none
     }
 
     // MARK: - TableView Datasource Methods
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        let category = categories?[indexPath.row]
-        cell.textLabel?.text = category?.name
+        
+        cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories"
+        
+        cell.backgroundColor = UIColor(hexString: categories?[indexPath.row].color ?? "1D9BF6")
+        
         return cell
     }
 
@@ -78,6 +84,7 @@ class CategoryViewController: SwipeTableViewController {
 
             let newCategory = Category()
             newCategory.name = categoryName
+            newCategory.color = UIColor.randomFlat.hexValue()
 
             // save categories to disk
             CategoryStorage.shared.save { realm in
