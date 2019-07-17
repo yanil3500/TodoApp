@@ -6,6 +6,7 @@
 //  Copyright © 2019 Elyanil Liranzo Castro. All rights reserved.
 //
 
+import ChameleonFramework
 import RealmSwift
 import UIKit
 
@@ -29,6 +30,19 @@ class TodoListViewController: SwipeTableViewController {
         if let item = items?[indexPath.row] {
             cell.textLabel?.text = item.title
             cell.accessoryType = item.done ? .checkmark : .none
+
+            // creating a gradient flow
+            // the cell's background color is going to be set based on the current indexPath and the total # of items
+            // backgroundColor = current index path / # of items
+            let colorDarknessPercentage = CGFloat(indexPath.row) / CGFloat(items!.count)
+            let selectedCategoryBackgroundColor = UIColor(hexString: selectedCategory!.color!)!
+            if let backgroundColor = selectedCategoryBackgroundColor.darken(byPercentage: colorDarknessPercentage) {
+                cell.backgroundColor = backgroundColor
+                cell.textLabel?.textColor = ContrastColorOf(backgroundColor, returnFlat: true)
+            }
+            
+            
+
         } else {
             cell.textLabel?.text = "No Items Added"
         }

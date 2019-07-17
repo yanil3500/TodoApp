@@ -6,13 +6,14 @@
 //  Copyright © 2019 Elyanil Liranzo Castro. All rights reserved.
 //
 
-import SwipeCellKit
 import UIKit
+import SwipeCellKit
 
 class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = 80
+        tableView.separatorStyle = .none
     }
 
     // MARK: - TableView Datasource Methods
